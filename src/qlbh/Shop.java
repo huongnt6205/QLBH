@@ -1,11 +1,12 @@
 package qlbh;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.*;
 
 public class Shop extends JFrame {
     private JPanel menuPanel;
@@ -161,101 +162,130 @@ public class Shop extends JFrame {
         productPanel.repaint();
     }
 
-    private JPanel createProductCard(Product product) {
-        JPanel card = new JPanel(new BorderLayout());
-        card.setPreferredSize(new Dimension(200, 330));
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createLineBorder(new Color(230, 220, 210), 1));
-        card.setOpaque(true);
+  private JPanel createProductCard(Product product) {
+    JPanel card = new JPanel(new BorderLayout());
+    card.setPreferredSize(new Dimension(200, 330));
+    card.setBackground(Color.WHITE);
+    card.setBorder(BorderFactory.createLineBorder(new Color(230, 220, 210), 1));
+    card.setOpaque(true);
 
-        ImageIcon icon;
-        try {
-            if (product.getImage() != null) {
-                icon = new ImageIcon(getClass().getClassLoader().getResource(product.getImage()));
-                Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-                icon = new ImageIcon(img);
-            } else {
-                icon = new ImageIcon("images/default.png");
-            }
-        } catch (Exception e) {
-            icon = new ImageIcon("images/default.png");
-        }
+    // Tải ảnh từ resource
+    ImageIcon icon = null;
+    URL imageUrl = getClass().getResource("/images/" + product.getImage());
+    System.out.println("Trying to load: /images/" + product.getImage());
+    System.out.println("URL: " + imageUrl);
 
-        JLabel imageLabel = new JLabel(icon);
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        imageLabel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
-        JPanel infoPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-        infoPanel.setOpaque(false);
-        JLabel nameLabel = new JLabel(product.getName(), SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        nameLabel.setForeground(new Color(50, 40, 30));
-
-        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        JLabel priceLabel = new JLabel(format.format(product.getPrice()), SwingConstants.CENTER);
-        priceLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        priceLabel.setForeground(PRICE_COLOR);
-
-        infoPanel.add(nameLabel);
-        infoPanel.add(priceLabel);
-
-        JPanel adminInfoPanel = new JPanel();
-        adminInfoPanel.setLayout(new BoxLayout(adminInfoPanel, BoxLayout.Y_AXIS));
-        adminInfoPanel.setOpaque(true);
-        adminInfoPanel.setBackground(Color.WHITE);
-        adminInfoPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(PRICE_COLOR, 1, true),
-                BorderFactory.createEmptyBorder(10, 15, 10, 15)
-        ));
-        adminInfoPanel.setVisible(false);
-
-        Font infoFont = new Font("Segoe UI", Font.PLAIN, 13);
-        Color infoColor = new Color(70, 70, 70);
-
-        JLabel[] labels = {
-                new JLabel("• Số lượng: " + product.getQuantity()),
-                new JLabel("• Trạng thái: " + product.getStatus()),
-                new JLabel("• Mô tả: " + product.getDescription())
-        };
-
-        for (JLabel lbl : labels) {
-            lbl.setFont(infoFont);
-            lbl.setForeground(infoColor);
-            lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
-            lbl.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
-            adminInfoPanel.add(lbl);
-        }
-
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setOpaque(false);
-        bottomPanel.add(infoPanel, BorderLayout.NORTH);
-        bottomPanel.add(adminInfoPanel, BorderLayout.CENTER);
-
-        card.add(imageLabel, BorderLayout.CENTER);
-        card.add(bottomPanel, BorderLayout.SOUTH);
-
-        card.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                adminInfoPanel.setVisible(true);
-                card.setBorder(BorderFactory.createLineBorder(PRICE_COLOR, 2, true));
-                card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                card.setBackground(new Color(255, 255, 245));
-                card.repaint();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                adminInfoPanel.setVisible(false);
-                card.setBorder(BorderFactory.createLineBorder(new Color(230, 220, 210), 1));
-                card.setCursor(Cursor.getDefaultCursor());
-                card.setBackground(Color.WHITE);
-                card.repaint();
-            }
-        });
-
-        return card;
+    if (imageUrl != null) {
+        icon = new ImageIcon(imageUrl);
+    } else {
+        imageUrl = getClass().getResource("/images/default.png");
+        icon = new ImageIcon(imageUrl);
+        System.out.println("Dùng ảnh mặc định.");
     }
+
+    // Resize ảnh giữ tỉ lệ an toàn
+    Image originalImage = icon.getImage();
+    int width = originalImage.getWidth(null);
+    int height = originalImage.getHeight(null);
+
+    if (width > 0 && height > 0) {
+        System.out.println("Kích thước ảnh gốc: " + width + " x " + height);
+        int maxW = 150, maxH = 150;
+        float ratio = Math.min((float) maxW / width, (float) maxH / height);
+        int newW = Math.round(width * ratio);
+        int newH = Math.round(height * ratio);
+        Image resized = originalImage.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(resized);
+    } else {
+        System.out.println("Ảnh chưa load xong hoặc lỗi -> giữ nguyên ảnh gốc.");
+    }
+
+    JLabel imageLabel = new JLabel(icon);
+    imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    imageLabel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+    // Thông tin sản phẩm
+    JPanel infoPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+    infoPanel.setOpaque(false);
+    JLabel nameLabel = new JLabel(product.getName(), SwingConstants.CENTER);
+    nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+    nameLabel.setForeground(new Color(50, 40, 30));
+
+    NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+    JLabel priceLabel = new JLabel(format.format(product.getPrice()), SwingConstants.CENTER);
+    priceLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+    priceLabel.setForeground(PRICE_COLOR);
+
+    infoPanel.add(nameLabel);
+    infoPanel.add(priceLabel);
+
+    // Thông tin phụ (hiện khi hover)
+    JPanel adminInfoPanel = new JPanel();
+    adminInfoPanel.setLayout(new BoxLayout(adminInfoPanel, BoxLayout.Y_AXIS));
+    adminInfoPanel.setOpaque(true);
+    adminInfoPanel.setBackground(Color.WHITE);
+    adminInfoPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(PRICE_COLOR, 1, true),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+    ));
+    adminInfoPanel.setVisible(false);
+
+    Font infoFont = new Font("Segoe UI", Font.PLAIN, 13);
+    Color infoColor = new Color(70, 70, 70);
+
+    JLabel[] labels = {
+            new JLabel("• Số lượng: " + product.getQuantity()),
+            new JLabel("• Trạng thái: " + product.getStatus()),
+            new JLabel("• Mô tả: " + product.getDescription())
+    };
+
+    for (JLabel lbl : labels) {
+        lbl.setFont(infoFont);
+        lbl.setForeground(infoColor);
+        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lbl.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
+        adminInfoPanel.add(lbl);
+    }
+
+    JPanel bottomPanel = new JPanel(new BorderLayout());
+    bottomPanel.setOpaque(false);
+    bottomPanel.add(infoPanel, BorderLayout.NORTH);
+    bottomPanel.add(adminInfoPanel, BorderLayout.CENTER);
+
+    // Thêm thành phần vào card
+    card.add(imageLabel, BorderLayout.CENTER);
+    card.add(bottomPanel, BorderLayout.SOUTH);
+
+    // Hover effect
+    card.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseEntered(java.awt.event.MouseEvent e) {
+            adminInfoPanel.setVisible(true);
+            card.setBorder(BorderFactory.createLineBorder(PRICE_COLOR, 2, true));
+            card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            card.setBackground(new Color(255, 255, 245));
+        }
+
+        @Override
+        public void mouseExited(java.awt.event.MouseEvent e) {
+            adminInfoPanel.setVisible(false);
+            card.setBorder(BorderFactory.createLineBorder(new Color(230, 220, 210), 1));
+            card.setCursor(Cursor.getDefaultCursor());
+            card.setBackground(Color.WHITE);
+        }
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 2) { // Double click
+                QLSP qlsp = new QLSP();
+                qlsp.setVisible(true);
+                qlsp.openEditProductById(product.getId());
+    }
+}
+
+    });
+    return card;
+}
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Shop::new);

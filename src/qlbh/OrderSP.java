@@ -86,7 +86,7 @@ public class OrderSP {
     // Tìm kiếm đơn hàng theo tên khách hàng
     public static ArrayList<Order> searchOrders(String keyword) {
         ArrayList<Order> list = new ArrayList<>();
-        String sql = "SELECT * FROM orders WHERE customer_name LIKE ? ?";
+        String sql = "SELECT * FROM orders WHERE customer_name LIKE ? ";
         try (Connection conn = QLBH.DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, "%" + keyword + "%");

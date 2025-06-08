@@ -1,9 +1,9 @@
 package qlbh;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import javax.swing.*;
 
 public class Login_Signup extends JFrame {
     private JTabbedPane tabbedPane;
@@ -66,14 +66,14 @@ public class Login_Signup extends JFrame {
                 String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setString(1, username);
-                stmt.setString(2, password); // Nên mã hóa password thực tế
+                stmt.setString(2, password); 
 
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
                     JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
-                    new Home(); // Giao diện chính sau đăng nhập
+                    new Shop(); // Giao diện chính sau đăng nhập
                 } else {
                     JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }

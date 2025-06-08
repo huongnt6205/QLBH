@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 06, 2025 at 06:29 PM
+-- Generation Time: Jun 08, 2025 at 07:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,23 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `qlbh`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `products`
---
-
-CREATE TABLE `products` (
-  `id` varchar(20) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `category` varchar(50) DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -59,17 +42,12 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `username`, `password`, `role`, `email`) VALUES
 (1, 'hungyen', '112233', 'admin', NULL),
 (2, 'ngohuong', '112233', 'admin', NULL),
-(3, 'Sam', '1234', 'user', 'sam@gmail.com');
+(3, 'Sam', '1234', 'user', 'sam@gmail.com'),
+(4, 'bap', '123456', 'user', 'bap@gmail.com');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -86,7 +64,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

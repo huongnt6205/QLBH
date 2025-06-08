@@ -4,6 +4,8 @@
  */
 package qlbh;
 
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author yenhhn
@@ -14,6 +16,7 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-              
+        SwingUtilities.invokeLater(() -> new Login_Signup().setVisible(true));
+
     }
 }

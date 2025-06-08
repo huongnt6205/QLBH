@@ -1,11 +1,11 @@
 package qlbh;
 
-import javax.swing.*;
-import javax.swing.table.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
 public class QLSP extends JFrame {
     private JTable table;
@@ -15,7 +15,7 @@ public class QLSP extends JFrame {
     private final int IMAGE_HEIGHT = 60;
 
     public QLSP() {
-        setTitle("Quản lý sản phẩm");
+        setTitle("QLSP");
         setSize(1100, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -40,6 +40,7 @@ public class QLSP extends JFrame {
             dispose();     // Đóng QLBH hiện tại
             new Home();    // Mở lại giao diện Home.java
         });
+       
 
         headerPanel.add(backButton, BorderLayout.WEST);
         headerPanel.add(titleLabel, BorderLayout.CENTER);
@@ -57,6 +58,7 @@ public class QLSP extends JFrame {
             }
         };
 
+        
         table = new JTable(model);
         table.setRowHeight(IMAGE_HEIGHT + 10);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -158,7 +160,7 @@ public class QLSP extends JFrame {
 
     JTextField idField = new JTextField();
     JTextField nameField = new JTextField();
-    JLabel imageLabel = new JLabel("Chưa chọn ảnh");
+    JLabel imageLabel = new JLabel("");
     JButton chooseImageBtn = new JButton("Chọn ảnh");
     JTextField categoryField = new JTextField();
     JTextField priceField = new JTextField();
@@ -253,6 +255,19 @@ public class QLSP extends JFrame {
     dialog.add(bottom, BorderLayout.SOUTH);
     dialog.setVisible(true);
 }
+        public void openEditProductById(String productId) {
+         // Tìm vị trí row trong bảng theo id
+         for (int i = 0; i < model.getRowCount(); i++) {
+             if (model.getValueAt(i, 0).equals(productId)) {
+                 // Mở dialog sửa với row tương ứng
+                 openProductDialog(i);
+                 return;
+             }
+         }
+         // Nếu không tìm thấy thì có thể tải lại dữ liệu rồi thử lại hoặc báo lỗi
+         JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm với mã: " + productId);
+     }
+
 
 
     private void addLabelAndComponent(JPanel panel, GridBagConstraints gbc, int y, String label, Component comp) {

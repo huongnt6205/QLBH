@@ -1,13 +1,13 @@
 package qlbh;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 public class Home extends JFrame {
 
     public Home() {
-        setTitle("Trang Chủ Quản Lý ");
+        setTitle("Trang Chủ ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 550);
         setLocationRelativeTo(null);
